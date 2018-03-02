@@ -33,7 +33,8 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
     normal_distribution<double> dist_y(y, std_y);
     normal_distribution<double> dist_theta(theta, std_theta);
 
-    for (int i = 0; i < num_particles; ++i) {
+    for (int i = 0; i < num_particles; ++i)
+    {
         Particle p;
         p.weight = 1;
 
@@ -54,8 +55,9 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	// NOTE: When adding noise you may find std::normal_distribution and std::default_random_engine useful.
 	//  http://en.cppreference.com/w/cpp/numeric/random/normal_distribution
 	//  http://www.cplusplus.com/reference/random/default_random_engine/
-    for (int i = 0; i < num_particles; ++i) {
 
+    for (int i = 0; i < num_particles; ++i)
+    {
         double x = particles[i].x;
         double y = particles[i].y;
         double theta = particles[i].theta;
@@ -89,7 +91,6 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
         particles[i].y = dist_y(gen);
         particles[i].theta = dist_theta(gen);
     }
-
 }
 
 void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations) {
@@ -98,6 +99,29 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::ve
 	// NOTE: this method will NOT be called by the grading code. But you will probably find it useful to 
 	//   implement this method and use it as a helper during the updateWeights phase.
 
+    for (int i = 0; i < observations.size(); i++)
+    {
+        double minDistance = numeric_limits<double>::max();
+        int nearestLandmarkId = -1;
+
+        for (int j = 0; j < predicted.size(); j++ )
+        {
+            double dX = observations[i].x - predicted[j].x;
+            double dY = observations[i].y - predicted[j].y;
+
+            double distance = dX * dX + dY * dY;
+
+            // If the "distance" is less than min, stored the id and update min.
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                nearestLandmarkId = predicted[j].id;
+            }
+        }
+
+        // Update the observation identifier
+        observations[i].id = nearestLandmarkId;
+    }
 }
 
 void ParticleFilter::updateWeights(double sensor_range, double std_landmark[], 
