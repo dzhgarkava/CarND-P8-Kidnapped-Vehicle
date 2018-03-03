@@ -60,6 +60,14 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	//  http://en.cppreference.com/w/cpp/numeric/random/normal_distribution
 	//  http://www.cplusplus.com/reference/random/default_random_engine/
 
+    default_random_engine gen;
+    double std_x, std_y, std_theta; // Standard deviations for x, y, and theta
+
+    // Set standard deviations for x, y, and theta
+    std_x = std_pos[0];
+    std_y = std_pos[1];
+    std_theta = std_pos[2];
+
     for (int i = 0; i < num_particles; ++i)
     {
         double x = particles[i].x;
@@ -77,14 +85,6 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
             y = y + (velocity / yaw_rate) * (cos(theta) - cos(theta + yaw_rate * delta_t));
             theta = theta + yaw_rate * delta_t;
         }
-
-        default_random_engine gen;
-        double std_x, std_y, std_theta; // Standard deviations for x, y, and theta
-
-        // Set standard deviations for x, y, and theta
-        std_x = std_pos[0];
-        std_y = std_pos[1];
-        std_theta = std_pos[2];
 
         // These lines creates a normal (Gaussian) distribution for x, y and theta
         normal_distribution<double> dist_x(x, std_x);
@@ -151,7 +151,7 @@ void ParticleFilter::resample() {
     discrete_distribution<int> distribution(weights.begin(), weights.end());
 
     vector<Particle> resampledParticles;
-    for (unsigned int i = 0; i < num_particles; ++i)
+    for (int i = 0; i < num_particles; ++i)
     {
         int index = distribution(gen);
         resampledParticles.push_back(particles[index]);
