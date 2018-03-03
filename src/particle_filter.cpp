@@ -20,6 +20,9 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 
     num_particles = 10;
 
+    particles.resize(num_particles);
+    weights.resize(num_particles);
+
     default_random_engine gen;
     double std_x, std_y, std_theta; // Standard deviations for x, y, and theta
 
@@ -44,7 +47,8 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
         p.theta = dist_theta(gen);
 
         // Add particle to the vector
-        particles.push_back(p);
+        particles[i] = p;
+        weights[i] = 1;
     }
 
     is_initialized = true;
@@ -143,6 +147,17 @@ void ParticleFilter::resample() {
 	// NOTE: You may find std::discrete_distribution helpful here.
 	//   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
 
+    default_random_engine gen;
+    discrete_distribution<int> distribution(weights.begin(), weights.end());
+
+    vector<Particle> resampledParticles;
+    for (unsigned int i = 0; i < num_particles; ++i)
+    {
+        int index = distribution(gen);
+        resampledParticles.push_back(particles[index]);
+    }
+
+    particles = resampledParticles;
 }
 
 Particle ParticleFilter::SetAssociations(Particle& particle, const std::vector<int>& associations, 
@@ -156,6 +171,8 @@ Particle ParticleFilter::SetAssociations(Particle& particle, const std::vector<i
     particle.associations= associations;
     particle.sense_x = sense_x;
     particle.sense_y = sense_y;
+
+    return particle;
 }
 
 string ParticleFilter::getAssociations(Particle best)
