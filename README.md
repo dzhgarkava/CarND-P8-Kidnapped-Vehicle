@@ -5,7 +5,9 @@ In this project I implemented an Two-dimensional Particle Filter to complete the
 
 This Particle Filter will be given a map and some initial localization information (analogous to what a GPS would provide). At each time step filter will also get observation and control data.
 
-My **Error = [x:.154, y:.145, yaw:.005]** and this result allows to pass the test successfully. 
+I use 100 particles.
+
+My **Error = [x:.116, y:.107, yaw:.004]** and this result allows to pass the test successfully. 
 
 [//]: # (Image References)
 [image1]: ./particle_pass.png
