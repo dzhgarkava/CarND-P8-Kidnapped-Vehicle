@@ -113,6 +113,8 @@ particle_filter.h
 /Users/dzhgarkava/Documents/Udacity/SelfDrivingCar/Term2/CarND-P8-Kidnapped-Vehicle/src/particle_filter.h
 helper_functions.h
 /Users/dzhgarkava/Documents/Udacity/SelfDrivingCar/Term2/CarND-P8-Kidnapped-Vehicle/src/helper_functions.h
+map.h
+/Users/dzhgarkava/Documents/Udacity/SelfDrivingCar/Term2/CarND-P8-Kidnapped-Vehicle/src/map.h
 
 /usr/local/include/pthread-barrier.h
 errno.h

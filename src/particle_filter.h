@@ -2,9 +2,10 @@
 #define PARTICLE_FILTER_H_
 
 #include "helper_functions.h"
+#include "map.h"
 
-struct Particle {
-
+struct Particle
+{
 	int id;
 	double x;
 	double y;
@@ -15,14 +16,10 @@ struct Particle {
 	std::vector<double> sense_y;
 };
 
-
-
-class ParticleFilter {
-	
+class ParticleFilter
+{
 	// Number of particles to draw
-	int num_particles; 
-	
-	
+	int num_particles;
 	
 	// Flag, if filter is initialized
 	bool is_initialized;
@@ -63,15 +60,7 @@ public:
 	 * @param yaw_rate Yaw rate of car from t to t+1 [rad/s]
 	 */
 	void prediction(double delta_t, double std_pos[], double velocity, double yaw_rate);
-	
-	/**
-	 * dataAssociation Finds which observations correspond to which landmarks (likely by using
-	 *   a nearest-neighbors data association).
-	 * @param predicted Vector of predicted landmark observations
-	 * @param observations Vector of landmark observations
-	 */
-	void dataAssociation(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations);
-	
+
 	/**
 	 * updateWeights Updates the weights for each particle based on the likelihood of the 
 	 *   observed measurements. 
@@ -81,7 +70,7 @@ public:
 	 * @param map Map class containing map landmarks
 	 */
 	void updateWeights(double sensor_range, double std_landmark[], const std::vector<LandmarkObs> &observations,
-			const Map &map_landmarks);
+			const Map &map);
 	
 	/**
 	 * resample Resamples from the updated set of particles to form
@@ -107,8 +96,24 @@ public:
 	const bool initialized() const {
 		return is_initialized;
 	}
+
+	/**
+	 * Get landmark list by sensor range
+	 * @param sensor_range Range [m] of sensor
+	 * @param x - particle.x
+	 * @param y - particle.y
+	 * @param map Map class containing map landmarks
+	 * @return Vector of landmarks
+	 */
+	std::vector<Map::single_landmark_s> GetLandmarksBySensorRange(double sensor_range, double x, double y, const Map &map);
+
+	/**
+	 * @param observation - current observation (in MAP's coordinate system)
+	 * @param landmarks - list of landmarks
+	 * @return nearest landmark
+	 */
+	Map::single_landmark_s GetNearestLandmark(LandmarkObs observation, std::vector<Map::single_landmark_s> landmarks);
+
 };
-
-
 
 #endif /* PARTICLE_FILTER_H_ */
