@@ -140,14 +140,14 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
             vector<Map::single_landmark_s> landmarks = GetLandmarksBySensorRange(sensor_range, p.x, p.y, map);
 
             // Get nearest landmark for current observation
-            Map::single_landmark_s nearest_landmark = GetNearestLandmark(observation, landmarks);
-            associations.push_back(nearest_landmark.id_i);
+            Map::single_landmark_s nearestLandmark = GetNearestLandmark(observation, landmarks);
+            associations.push_back(nearestLandmark.id_i);
 
             particles[i] = SetAssociations(particles[i], associations, sense_x, sense_y);
 
             // Calculate weight
-            float mu_x = nearest_landmark.x_f;
-            float mu_y = nearest_landmark.y_f;
+            float mu_x = nearestLandmark.x_f;
+            float mu_y = nearestLandmark.y_f;
             float diffX = observation.x - mu_x;
             float diffY = observation.y - mu_y;
             double exponent = ((diffX * diffX) / (2 * sig_x * sig_x)) + ((diffY * diffY) / (2 * sig_y * sig_y));
@@ -186,7 +186,7 @@ Particle ParticleFilter::SetAssociations(Particle& particle, const std::vector<i
     // sense_x: the associations x mapping already converted to world coordinates
     // sense_y: the associations y mapping already converted to world coordinates
 
-    particle.associations= associations;
+    particle.associations = associations;
     particle.sense_x = sense_x;
     particle.sense_y = sense_y;
 
@@ -240,7 +240,7 @@ vector<Map::single_landmark_s> ParticleFilter::GetLandmarksBySensorRange(double 
 
 Map::single_landmark_s ParticleFilter::GetNearestLandmark(LandmarkObs observation, vector<Map::single_landmark_s> landmarks)
 {
-    Map::single_landmark_s nearest_landmark;
+    Map::single_landmark_s nearestLandmark;
     double min_dist = std::numeric_limits<double>::max();
 
     for (int l = 0; l < landmarks.size(); ++l)
@@ -249,12 +249,12 @@ Map::single_landmark_s ParticleFilter::GetNearestLandmark(LandmarkObs observatio
 
         if (distance < min_dist)
         {
-            nearest_landmark.id_i = landmarks[l].id_i;
-            nearest_landmark.x_f = landmarks[l].x_f;
-            nearest_landmark.y_f = landmarks[l].y_f;
+            nearestLandmark.id_i = landmarks[l].id_i;
+            nearestLandmark.x_f = landmarks[l].x_f;
+            nearestLandmark.y_f = landmarks[l].y_f;
             min_dist = distance;
         }
     }
 
-    return nearest_landmark;
+    return nearestLandmark;
 }
